@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1080127521553",
+    "project_id": "malayalam-stickers-a4541",
+    "storage_bucket": "malayalam-stickers-a4541.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1080127521553:android:b509eb203fb96f29e9c2b0",
+        "android_client_info": {
+          "package_name": "com.techpakka.whatsappstickerspack"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1080127521553-s1fkn7278ukjq4asms23pco5noj8fqde.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8LVlnp9ihNWnEximajW2DK58I1X-TAgk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1080127521553-s1fkn7278ukjq4asms23pco5noj8fqde.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,88 @@
+<animated-vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt">
+    <aapt:attr name="android:drawable">
+        <vector
+            android:name="handanim"
+            android:width="500dp"
+            android:height="500dp"
+            android:viewportWidth="500"
+            android:viewportHeight="500">
+            <path
+                android:name="click_circle"
+                android:pathData="M 161.481 107.366 C 161.481 122.287 149.385 134.382 134.465 134.382 C 119.544 134.382 107.449 122.287 107.449 107.366 C 107.449 92.445 119.544 80.35 134.465 80.35 C 149.385 80.35 161.481 92.445 161.481 107.366 Z"
+                android:fillColor="#d8d8d8"
+                android:fillAlpha="0"/>
+            <group
+                android:name="hand"
+                android:translateX="2">
+                <path
+                    android:name="dark_skin"
+                    android:pathData="M 375.765 443.377 C 360.417 448.141 343.351 443.157 336.736 440.07 C 334.31 432.794 327.342 414.801 318.875 401.041 C 310.408 387.282 292.857 371.053 285.138 364.659 C 282.713 363.557 278.39 358.572 280.508 347.46 C 284.212 341.638 284.257 327.394 283.815 320.999 L 281.83 313.723 L 280.508 309.091 C 279.846 305.784 280.243 305.387 281.83 301.154 C 283.418 296.92 289.549 296.744 292.415 297.184 C 290.872 282.853 287.916 251.938 288.445 242.941 C 291.092 232.358 298.368 228.388 303.66 228.388 C 308.952 228.388 312.921 232.358 314.245 236.326 C 315.567 240.295 314.245 268.079 324.829 299.831 C 331.444 290.569 340.043 287.923 354.596 296.523 C 364.651 286.998 375.985 294.76 380.395 299.831 C 385.246 299.39 396.139 302.345 400.902 317.691 C 406.855 336.875 396.933 360.689 394.948 378.55 C 393.361 392.838 399.138 416.697 402.225 426.84 C 399.8 430.368 391.111 438.615 375.765 443.377 Z"
+                    android:fillColor="#f7a071"/>
+                <path
+                    android:name="light_skin"
+                    android:pathData="M 365.181 416.917 C 356.581 418.902 348.643 417.91 344.012 415.595 C 338.058 412.618 333.429 410.964 323.505 398.396 C 313.496 385.714 296.825 369.73 289.107 363.335 C 286.682 362.233 281.036 359.234 283.153 348.12 C 285.043 339.521 284.918 328.717 284.476 322.323 L 281.736 310.416 C 281.076 309.091 279.643 307.036 281.231 302.802 C 282.818 298.569 295.88 325.294 298.526 332.57 C 296.982 318.237 287.822 251.938 288.352 242.941 C 290.998 232.358 298.274 228.388 303.566 228.388 C 308.858 228.388 312.828 232.358 314.15 236.326 C 315.473 240.295 312.921 289.908 332.105 311.076 C 323.727 285.939 353.273 289.908 359.227 306.446 C 353.935 286.601 376.647 299.39 381.057 304.461 C 388.333 299.831 396.933 305.123 398.917 318.353 C 401.897 338.218 392.964 361.351 390.979 379.212 C 389.391 393.5 388.994 398.396 386.349 403.688 C 383.924 407.216 380.838 413.305 365.181 416.917 Z"
+                    android:fillColor="#fab480"/>
+                <path
+                    android:name="nail1"
+                    android:pathData="M 293.076 248.233 L 312.26 248.233 C 313.143 242.28 312.656 230.505 303.66 231.034 C 294.664 231.563 292.857 242.722 293.076 248.233 Z"
+                    android:fillColor="#fde0ce"/>
+                <path
+                    android:name="nail2"
+                    android:pathData="M 281.83 302.476 C 285.358 304.682 292.149 310.547 291.092 316.368 C 287.916 320.072 285.358 321.441 284.476 321.66 C 282.933 317.03 279.184 305.123 281.83 302.476 Z"
+                    android:fillColor="#fde0ce"/>
+            </group>
+        </vector>
+    </aapt:attr>
+    <target android:name="hand">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:propertyName="translateX"
+                    android:duration="900"
+                    android:valueFrom="2"
+                    android:valueTo="-167"
+                    android:valueType="floatType"
+                    android:interpolator="@android:anim/decelerate_interpolator"/>
+                <objectAnimator
+                    android:propertyName="translateY"
+                    android:duration="900"
+                    android:valueFrom="0"
+                    android:valueTo="-138"
+                    android:valueType="floatType"
+                    android:interpolator="@android:interpolator/fast_out_slow_in"/>
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="click_circle">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:propertyName="pathData"
+                    android:startOffset="900"
+                    android:duration="251"
+                    android:valueFrom="M 161.481 107.366 C 161.481 122.287 149.385 134.382 134.465 134.382 C 119.544 134.382 107.449 122.287 107.449 107.366 C 107.449 92.445 119.544 80.35 134.465 80.35 C 149.385 80.35 161.481 92.445 161.481 107.366 Z"
+                    android:valueTo="M 190.859 107.366 C 190.859 138.512 165.609 163.76 134.465 163.76 C 103.318 163.76 78.071 138.512 78.071 107.366 C 78.071 76.22 103.318 50.972 134.465 50.972 C 165.609 50.972 190.859 76.22 190.859 107.366 Z"
+                    android:valueType="pathType"
+                    android:interpolator="@android:interpolator/fast_out_slow_in"/>
+                <objectAnimator
+                    android:propertyName="fillAlpha"
+                    android:startOffset="900"
+                    android:duration="251"
+                    android:valueFrom="1"
+                    android:valueTo="0"
+                    android:valueType="floatType"
+                    android:interpolator="@android:interpolator/fast_out_slow_in"/>
+                <objectAnimator
+                    android:propertyName="fillAlpha"
+                    android:startOffset="899"
+                    android:duration="1"
+                    android:valueFrom="0"
+                    android:valueTo="1"
+                    android:valueType="floatType"
+                    android:interpolator="@android:interpolator/fast_out_slow_in"/>
+            </set>
+        </aapt:attr>
+    </target>
+</animated-vector>
