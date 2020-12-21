@@ -9,6 +9,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.mallucoder.myutils.inappupdates.InAppUpdates;
@@ -150,7 +151,7 @@ public class HomeActivity extends AddStickerPackActivity implements StickerPackL
     private static void getStickersFromMarket() {
         if (serverStickerPacks.isEmpty()){
             FirebaseFirestore db = FirebaseFirestore.getInstance();
-            db.collection("Stickerpacks")
+            db.collection("Stickerpacks").orderBy("time_stamp", Query.Direction.ASCENDING)
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override

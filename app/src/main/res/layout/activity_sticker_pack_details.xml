@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:layout_marginTop="8dp"
     android:layout_marginBottom="@dimen/preview_side_margin"
+    android:background="#FFFFF9F2"
     android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout

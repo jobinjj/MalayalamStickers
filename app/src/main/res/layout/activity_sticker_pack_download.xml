@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:layout_marginTop="8dp"
     android:layout_marginBottom="@dimen/preview_side_margin"
+    android:background="#FFFFF9F2"
     android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -69,9 +70,9 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/download_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/download_container"
         android:visibility="gone">
 
 
@@ -135,14 +136,15 @@
             tools:visibility="visible" />
 
     </FrameLayout>
-<Button
-    android:id="@+id/downloadButton"
-    android:layout_marginStart="8dp"
-    android:layout_marginEnd="8dp"
-    style="@style/Widget.AppCompat.Button.Colored"
-    android:padding="24dp"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="@string/download"
-    android:onClick="downloadSticker"/>
+
+    <Button
+        android:id="@+id/downloadButton"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:onClick="downloadSticker"
+        android:padding="24dp"
+        android:text="@string/download" />
 </LinearLayout>

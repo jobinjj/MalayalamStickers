@@ -8,8 +8,8 @@ android {
         minSdkVersion 19
         targetSdkVersion 30
         multiDexEnabled true
-            versionCode 20
-        versionName "11"
+            versionCode 21
+        versionName "12"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         vectorDrawables.useSupportLibrary = true
         def contentProviderAuthority = applicationId + ".stickercontentprovider"
@@ -23,11 +23,11 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
