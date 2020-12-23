@@ -2,6 +2,7 @@ package com.techpakka.whatsappstickerspack.ui.market;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,10 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.amplifyframework.core.Amplify;
+import com.amplifyframework.core.model.query.Where;
+import com.amplifyframework.datastore.generated.model.StickerPacks;
+import com.amplifyframework.datastore.generated.model.Stickers;
 import com.techpakka.whatsappstickerspack.R;
 import com.techpakka.whatsappstickerspack.ui.HomeActivity;
 import com.techpakka.whatsappstickerspack.ui.notifications.StickerPackDownloadActivity;
@@ -53,6 +58,7 @@ public class StickerMarketFragment extends Fragment implements StickerMarketView
                 stickerMarketViewModel.adapter.notifyDataSetChanged();
             }
         });
+
 
         setUpList(stickerRecyclerView, stickerMarketViewModel.adapter);
 

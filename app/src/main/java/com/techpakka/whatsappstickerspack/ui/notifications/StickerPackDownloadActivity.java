@@ -2,6 +2,7 @@ package com.techpakka.whatsappstickerspack.ui.notifications;
 
 import android.os.Bundle;
 import android.text.format.Formatter;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
@@ -15,13 +16,15 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.amplifyframework.core.Amplify;
+import com.amplifyframework.core.model.query.Where;
+import com.amplifyframework.datastore.generated.model.Stickers;
 import com.bumptech.glide.Glide;
 import com.techpakka.whatsappstickerspack.R;
 import com.techpakka.whatsappstickerspack.idoideas.DataArchiver;
 import com.techpakka.whatsappstickerspack.ui.MarketStickerPreviewAdapter;
 import com.techpakka.whatsappstickerspack.utils.DownloadStickersFromURL;
 import com.techpakka.whatsappstickerspack.whatsappbasecode.AddStickerPackActivity;
-import com.techpakka.whatsappstickerspack.whatsappbasecode.StickerPreviewAdapter;
 import com.techpakka.whatsappstickerspack.whatsappbasecode.models.Sticker;
 import com.techpakka.whatsappstickerspack.whatsappbasecode.models.StickerPack;
 
@@ -29,6 +32,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class StickerPackDownloadActivity extends AddStickerPackActivity {
@@ -61,6 +65,8 @@ public class StickerPackDownloadActivity extends AddStickerPackActivity {
     private TextView txtSize;
     private Button downloadButton;
 
+    ArrayList<Sticker> stickerlist = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,9 +96,26 @@ public class StickerPackDownloadActivity extends AddStickerPackActivity {
         recyclerView.addOnScrollListener(dividerScrollListener);
         divider = findViewById(R.id.divider);
         if (marketStickerPreviewAdapter == null) {
-            marketStickerPreviewAdapter = new MarketStickerPreviewAdapter(getLayoutInflater(), R.drawable.sticker_error, getResources().getDimensionPixelSize(R.dimen.sticker_pack_details_image_size), getResources().getDimensionPixelSize(R.dimen.sticker_pack_details_image_padding), stickerPack,this);
+            marketStickerPreviewAdapter = new MarketStickerPreviewAdapter(stickerlist, getLayoutInflater(), R.drawable.sticker_error, getResources().getDimensionPixelSize(R.dimen.sticker_pack_details_image_size), getResources().getDimensionPixelSize(R.dimen.sticker_pack_details_image_padding),this);
             recyclerView.setAdapter(marketStickerPreviewAdapter);
         }
+        Amplify.DataStore.query(
+                Stickers.class, Where.matches(Stickers.STICKERPACKS_ID.eq(stickerPack.id)),
+                items -> {
+                    while (items.hasNext()) {
+                        Stickers item = items.next();
+                        Sticker sticker = new Sticker();
+                        sticker.setStickerUrl(item.getStickerUrl());
+                        sticker.setImageFileName(item.getImageFileName());
+                        sticker.setSize((long) Double.parseDouble(item.getSize()));
+                        List<String> emojis = Arrays.asList(item.getEmojis().split(","));
+                        sticker.setEmojis(emojis);
+                        stickerlist.add(sticker);
+                    }
+                    marketStickerPreviewAdapter.notifyDataSetChanged();
+                },
+                failure -> Log.e("Amplify", "Could not query DataStore", failure)
+        );
         packNameTextView.setText(stickerPack.name);
         packPublisherTextView.setText(stickerPack.publisher);
         Glide.with(this).load(stickerPack.getThumbnail()).into(packTrayIcon);

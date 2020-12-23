@@ -2,8 +2,11 @@ package com.techpakka.whatsappstickerspack.ui;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 
 
+import com.amplifyframework.core.Amplify;
+import com.amplifyframework.datastore.generated.model.StickerPacks;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -66,7 +69,33 @@ public class HomeActivity extends AddStickerPackActivity implements StickerPackL
         Fresco.initialize(this);
 
         addButtonClickedListener = this;
-        getStickersFromMarket();
+        //getStickersFromMarket();
+
+        getStickersFromAWSMarket();
+    }
+
+    private void getStickersFromAWSMarket() {
+        Amplify.DataStore.query(
+                StickerPacks.class,
+                items -> {
+                    while (items.hasNext()) {
+                        StickerPacks item = items.next();
+                        StickerPack stickerPack = new StickerPack();
+                        stickerPack.setThumbnail(item.getThumbnail());
+                        stickerPack.setDownloadUrl(item.getDownloadUrl());
+                        stickerPack.setTrayImageFile(item.getTrayImageFile());
+                        stickerPack.setIdentifier(item.getIdentifier());
+                        stickerPack.setName(item.getName());
+                        stickerPack.setId(item.getId());
+                        if (serverStickerPacks.size() == 0)
+                        serverStickerPacks.add(stickerPack);
+                    }
+                },
+                failure -> {
+                    Log.e("Amplify", "Could not query DataStore", failure);
+
+                }
+        );
     }
 
     @Override
@@ -148,7 +177,7 @@ public class HomeActivity extends AddStickerPackActivity implements StickerPackL
         HomeActivity.adapter = adapter;
     }
 
-    private static void getStickersFromMarket() {
+    /*private static void getStickersFromMarket() {
         if (serverStickerPacks.isEmpty()){
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             db.collection("Stickerpacks").orderBy("time_stamp", Query.Direction.ASCENDING)
@@ -198,5 +227,5 @@ public class HomeActivity extends AddStickerPackActivity implements StickerPackL
         }
 
 
-    }
+    }*/
 }
