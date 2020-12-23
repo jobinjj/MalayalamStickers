@@ -17,6 +17,7 @@ public class Sticker implements Parcelable {
     public String imageFileName;
     public List<String> emojis;
     public long size;
+    public String stickerUrl;
 
     public Sticker() {
     }
@@ -28,6 +29,7 @@ public class Sticker implements Parcelable {
 
     private Sticker(Parcel in) {
         imageFileName = in.readString();
+        stickerUrl = in.readString();
         emojis = in.createStringArrayList();
         size = in.readLong();
     }
@@ -56,6 +58,7 @@ public class Sticker implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(imageFileName);
+        dest.writeString(stickerUrl);
         dest.writeStringList(emojis);
         dest.writeLong(size);
     }
@@ -70,5 +73,13 @@ public class Sticker implements Parcelable {
 
     public void setEmojis(List<String> emojis) {
         this.emojis = emojis;
+    }
+
+    public String getStickerUrl() {
+        return stickerUrl;
+    }
+
+    public void setStickerUrl(String stickerUrl) {
+        this.stickerUrl = stickerUrl;
     }
 }

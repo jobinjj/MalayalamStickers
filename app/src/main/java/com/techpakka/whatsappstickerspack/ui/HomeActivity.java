@@ -183,6 +183,7 @@ public class HomeActivity extends AddStickerPackActivity implements StickerPackL
                                                     sticker.setSize((long) Double.parseDouble(document.getString("size")));
                                                     sticker.setImageFileName(document.getString("imageFileName"));
                                                     sticker.setEmojis((List<String>) document.get("emojis"));
+                                                    sticker.setStickerUrl(document.getString("stickerUrl"));
                                                     stickerlist.add(sticker);
                                                 }
                                                 stickerPack.setStickers(stickerlist);

@@ -69,7 +69,7 @@ public class MarketStickerPreviewAdapter extends RecyclerView.Adapter<MarketStic
     public void onBindViewHolder(@NonNull final StickerPreviewViewHolder stickerPreviewViewHolder, final int i) {
         stickerPreviewViewHolder.stickerPreviewView.setImageResource(errorResource);
         //stickerPreviewViewHolder.stickerPreviewView.setImageURI(ImageManipulation.getImageUri(stickerPack.getStickers().get(i).imageFileName,context));
-        Glide.with(context.getApplicationContext()).load(stickerPack.getStickers().get(i).getImageFileName()).into(stickerPreviewViewHolder.stickerPreviewView);
+        Glide.with(context.getApplicationContext()).load(stickerPack.getStickers().get(i).getStickerUrl()).into(stickerPreviewViewHolder.stickerPreviewView);
     }
 
     @Override

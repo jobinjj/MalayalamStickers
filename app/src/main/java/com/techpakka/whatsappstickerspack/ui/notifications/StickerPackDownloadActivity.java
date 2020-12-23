@@ -216,11 +216,11 @@ public class StickerPackDownloadActivity extends AddStickerPackActivity {
 
                                 private void saveStickerToLocalStickers() {
                                     ArrayList<StickerPack> localStickers = DataArchiver.readStickerPackJSONFromSharedPref(StickerPackDownloadActivity.this);
-                                    for (Sticker sticker :
+                              /*      for (Sticker sticker :
                                             stickerPack.getStickers()) {
                                         String imagePath = sticker.getImageFileName();
                                         sticker.setImageFileName(imagePath.substring(imagePath.lastIndexOf("/")+1));
-                                    }
+                                    }*/
                                     localStickers.add(stickerPack);
                                     DataArchiver.writeStickerBookJSON(localStickers,StickerPackDownloadActivity.this);
                                 }
