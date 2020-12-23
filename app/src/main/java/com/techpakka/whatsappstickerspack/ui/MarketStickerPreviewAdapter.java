@@ -16,21 +16,16 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.amplifyframework.datastore.generated.model.Stickers;
 import com.bumptech.glide.Glide;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.techpakka.whatsappstickerspack.R;
-import com.techpakka.whatsappstickerspack.whatsappbasecode.models.Sticker;
 import com.techpakka.whatsappstickerspack.whatsappbasecode.models.StickerPack;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class MarketStickerPreviewAdapter extends RecyclerView.Adapter<MarketStickerPreviewAdapter.StickerPreviewViewHolder> {
 
     @NonNull
-    private final List<Sticker> stickers;
+    private final StickerPack stickerPack;
 
     private final int cellSize;
     private final int cellLimit;
@@ -41,17 +36,17 @@ public class MarketStickerPreviewAdapter extends RecyclerView.Adapter<MarketStic
     private final LayoutInflater layoutInflater;
 
     public MarketStickerPreviewAdapter(
-            @NonNull List<Sticker> stickers, @NonNull final LayoutInflater layoutInflater,
+            @NonNull final LayoutInflater layoutInflater,
             final int errorResource,
             final int cellSize,
             final int cellPadding,
-            Context context) {
-        this.stickers = stickers;
+            @NonNull final StickerPack stickerPack, Context context) {
         this.cellSize = cellSize;
         this.cellPadding = cellPadding;
         this.cellLimit = 0;
         this.layoutInflater = layoutInflater;
         this.errorResource = errorResource;
+        this.stickerPack = stickerPack;
     this.context = context;
     }
 
@@ -74,13 +69,13 @@ public class MarketStickerPreviewAdapter extends RecyclerView.Adapter<MarketStic
     public void onBindViewHolder(@NonNull final StickerPreviewViewHolder stickerPreviewViewHolder, final int i) {
         stickerPreviewViewHolder.stickerPreviewView.setImageResource(errorResource);
         //stickerPreviewViewHolder.stickerPreviewView.setImageURI(ImageManipulation.getImageUri(stickerPack.getStickers().get(i).imageFileName,context));
-        Glide.with(context.getApplicationContext()).load(stickers.get(i).getStickerUrl()).into(stickerPreviewViewHolder.stickerPreviewView);
+        Glide.with(context.getApplicationContext()).load(stickerPack.getStickers().get(i).getStickerUrl()).into(stickerPreviewViewHolder.stickerPreviewView);
     }
 
     @Override
     public int getItemCount() {
         int numberOfPreviewImagesInPack;
-        numberOfPreviewImagesInPack = stickers.size();
+        numberOfPreviewImagesInPack = stickerPack.getStickers().size();
         if (cellLimit > 0) {
             return Math.min(numberOfPreviewImagesInPack, cellLimit);
         }

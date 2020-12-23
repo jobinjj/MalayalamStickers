@@ -7,17 +7,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.amplifyframework.core.Amplify;
-import com.amplifyframework.datastore.DataStoreChannelEventName;
-import com.amplifyframework.datastore.events.NetworkStatusEvent;
-import com.amplifyframework.datastore.generated.model.StickerPacks;
-import com.amplifyframework.datastore.generated.model.Stickers;
-import com.amplifyframework.hub.HubChannel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -51,27 +44,16 @@ public class SplashScreenActivity extends AppCompatActivity implements DownloadS
         status = findViewById(R.id.downloadStatus);
         progressBar.setIndeterminate(false);
         progressBar.setMax(100);
-        Amplify.DataStore.start(
-                () -> Log.i("MyAmplifyApp", "DataStore started"),
-                error -> Log.e("MyAmplifyApp", "Error starting DataStore", error)
-        );
-        Amplify.Hub.subscribe(
-                HubChannel.DATASTORE,
-                hubEvent -> {
-                    if(DataStoreChannelEventName.SYNC_QUERIES_READY.toString().equals(hubEvent.getName())){
-                        Intent intent = new Intent(SplashScreenActivity.this, HomeActivity.class);
-                        startActivity(intent);
-                        finish();
-                    }
+        if (Authenticated()){
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent intent = new Intent(SplashScreenActivity.this, HomeActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
-        );
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-
+            },1000);
             }
-        },3000);
     }
 
     private boolean zipFileExists() {

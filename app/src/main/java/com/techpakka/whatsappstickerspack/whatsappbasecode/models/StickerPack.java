@@ -13,7 +13,6 @@ import android.os.Parcelable;
 import java.util.List;
 
 public class StickerPack implements Parcelable {
-    public String id;
     public String identifier;
     public String name;
     public String publisher = "jobin";
@@ -70,7 +69,6 @@ public class StickerPack implements Parcelable {
         iosAppStoreLink = in.readString();
         thumbnail = in.readString();
         downloadUrl = in.readString();
-        id = in.readString();
         stickers = in.createTypedArrayList(Sticker.CREATOR);
         totalSize = in.readLong();
         androidPlayStoreLink = in.readString();
@@ -148,7 +146,6 @@ public class StickerPack implements Parcelable {
         dest.writeString(iosAppStoreLink);
         dest.writeString(thumbnail);
         dest.writeString(downloadUrl);
-        dest.writeString(id);
         dest.writeTypedList(stickers);
         dest.writeLong(totalSize);
         dest.writeString(androidPlayStoreLink);
@@ -192,11 +189,6 @@ public class StickerPack implements Parcelable {
         this.downloadUrl = downloadUrl;
     }
 
-    public String getId() {
-        return id;
-    }
 
-    public void setId(String id) {
-        this.id = id;
-    }
+
 }

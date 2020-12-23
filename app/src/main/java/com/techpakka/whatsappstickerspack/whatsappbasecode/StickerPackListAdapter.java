@@ -71,6 +71,7 @@ public class StickerPackListAdapter extends RecyclerView.Adapter<StickerPackList
         });
         viewHolder.imageRowView.removeAllViews();
         //if this sticker pack contains less stickers than the max, then take the smaller size.
+        int actualNumberOfStickersToShow = Math.min(maxNumberOfStickersInARow, pack.getStickers().size());
         for (int i = 0; i < 3; i++) {
             final SimpleDraweeView rowImage = (SimpleDraweeView) LayoutInflater.from(context).inflate(R.layout.sticker_packs_list_image_item, viewHolder.imageRowView, false);
             rowImage.setImageURI(ImageManipulation.getImageUri(pack.getSticker(i).imageFileName,context));
