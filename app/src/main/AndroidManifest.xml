@@ -19,19 +19,21 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ui.StickerPackDetailsActivity"></activity>
-        <activity
-            android:name=".ui.SplashScreenActivity"
-            android:theme="@style/noActionBar">
+        <activity android:name=".StickerUploaderActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.HomeActivity">
-
+        <activity android:name=".room.RoomActivity"></activity>
+        <activity
+            android:name=".ui.SplashScreenActivity"
+            android:theme="@style/noActionBar">
         </activity>
+        <activity android:name=".ui.StickerPackDetailsActivity" />
+        <activity android:name=".ui.HomeActivity" />
         <!--
              Set color used with incoming notification messages. This is used when no color is set for the incoming
              notification message. See README(https://goo.gl/6BKBk7) for more.
@@ -42,9 +44,8 @@
         <!-- [END fcm_default_icon] -->
         <!-- [START fcm_default_channel] -->
         <activity android:name=".whatsappbasecode.EntryActivity" />
-
         <activity android:name=".ui.PlaystoreActivity" />
-        <activity android:name=".ui.notifications.StickerPackDownloadActivity"/>
+        <activity android:name=".ui.notifications.StickerPackDownloadActivity" />
 
         <provider
             android:name=".whatsappbasecode.StickerContentProvider"

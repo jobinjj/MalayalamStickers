@@ -9,16 +9,21 @@ import com.amplifyframework.core.Amplify;
 import com.amplifyframework.datastore.generated.model.StickerPacks;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firestore.v1.DocumentTransform;
 import com.mallucoder.myutils.inappupdates.InAppUpdates;
 import com.techpakka.whatsappstickerspack.R;
 import com.techpakka.whatsappstickerspack.idoideas.DataArchiver;
 import com.techpakka.whatsappstickerspack.idoideas.StickerBook;
+import com.techpakka.whatsappstickerspack.room.StickerPacks;
 import com.techpakka.whatsappstickerspack.whatsappbasecode.AddStickerPackActivity;
 import com.techpakka.whatsappstickerspack.whatsappbasecode.StickerPackListAdapter;
 import com.techpakka.whatsappstickerspack.whatsappbasecode.WhitelistCheck;
@@ -34,17 +39,20 @@ import androidx.navigation.ui.NavigationUI;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class HomeActivity extends AddStickerPackActivity implements StickerPackListAdapter.OnAddButtonClickedListener {
 
+    private static final String TAG = HomeActivity.class.getSimpleName();
     private WhiteListCheckAsyncTask whiteListCheckAsyncTask;
 
     public static List<StickerPack> localStickerPackList;
     public static StickerPackListAdapter.OnAddButtonClickedListener addButtonClickedListener;
     public static StickerPackListAdapter adapter;
 
-    public static ArrayList<StickerPack> serverStickerPacks = new ArrayList<>();
+    public static ArrayList<StickerPacks> serverStickerPacks = new ArrayList<>();
     public static MutableLiveData<ArrayList<StickerPack>> mutableStickerPacks = new MutableLiveData<>();
 
     @Override
@@ -67,7 +75,7 @@ public class HomeActivity extends AddStickerPackActivity implements StickerPackL
         InAppUpdates.checkForUpdates(this);
 
         Fresco.initialize(this);
-
+        StickerBook.init(this);
         addButtonClickedListener = this;
         //getStickersFromMarket();
 
@@ -103,6 +111,7 @@ public class HomeActivity extends AddStickerPackActivity implements StickerPackL
 
         addStickerPackToWhatsApp(stickerPack.identifier, stickerPack.name);
     }
+
 
     static class WhiteListCheckAsyncTask extends AsyncTask<List<StickerPack>, Void, List<StickerPack>> {
         private final WeakReference<HomeActivity> homeActivityWeakReference;
@@ -177,55 +186,5 @@ public class HomeActivity extends AddStickerPackActivity implements StickerPackL
         HomeActivity.adapter = adapter;
     }
 
-    /*private static void getStickersFromMarket() {
-        if (serverStickerPacks.isEmpty()){
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            db.collection("Stickerpacks").orderBy("time_stamp", Query.Direction.ASCENDING)
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    StickerPack stickerPack = new StickerPack();
-                                    stickerPack.setName(document.getString("name"));
-                                    stickerPack.setIdentifier(document.getString("identifier"));
-                                    stickerPack.setTrayImageFile(document.getString("trayImageFile"));
-                                    stickerPack.setThumbnail(document.getString("thumbnail"));
-                                    stickerPack.setDownloadUrl(document.getString("downloadUrl"));
-                                    getStickers(stickerPack,document);
-                                }
-                            } else {
-                            }
-                        }
 
-                        private void getStickers(StickerPack stickerPack, QueryDocumentSnapshot document) {
-                            db.collection("Stickerpacks").document(document.getString("name")).collection("stickers")
-                                    .get()
-                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                            if (task.isSuccessful()) {
-                                                ArrayList<Sticker> stickerlist = new ArrayList<>();
-                                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                                    Sticker sticker = new Sticker();
-                                                    sticker.setSize((long) Double.parseDouble(document.getString("size")));
-                                                    sticker.setImageFileName(document.getString("imageFileName"));
-                                                    sticker.setEmojis((List<String>) document.get("emojis"));
-                                                    sticker.setStickerUrl(document.getString("stickerUrl"));
-                                                    stickerlist.add(sticker);
-                                                }
-                                                stickerPack.setStickers(stickerlist);
-                                                serverStickerPacks.add(stickerPack);
-                                                mutableStickerPacks.setValue(serverStickerPacks);
-                                            } else {
-                                            }
-                                        }
-                                    });
-                        }
-                    });
-        }
-
-
-    }*/
 }

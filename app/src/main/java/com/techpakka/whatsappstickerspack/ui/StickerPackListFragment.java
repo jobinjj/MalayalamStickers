@@ -55,7 +55,6 @@ public class StickerPackListFragment extends Fragment {
         packRecyclerView = root.findViewById(R.id.sticker_pack_list);
 
         if (hasDownloadedStickers()){
-            StickerBook.init(getActivity());
             stickerPackList = StickerBook.getAllStickerPacks();//getIntent().getParcelableArrayListExtra( EXTRA_STICKER_PACK_LIST_DATA);
             showStickerPackList(stickerPackList);
         }else noStickersFound.setVisibility(View.VISIBLE);

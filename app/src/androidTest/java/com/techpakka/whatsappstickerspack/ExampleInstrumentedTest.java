@@ -135,11 +135,5 @@ public class ExampleInstrumentedTest {
         return f.isDirectory();
     }
 
-    @Test
-    public void editPrefs(){
-        Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        SharedPreferences sharedPreferences = appContext.getSharedPreferences("StickerMaker",Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("stickerbook","").apply();
-    }
+
 }

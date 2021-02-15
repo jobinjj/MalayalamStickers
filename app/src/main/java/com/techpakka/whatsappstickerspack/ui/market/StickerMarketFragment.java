@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.techpakka.whatsappstickerspack.R;
+import com.techpakka.whatsappstickerspack.room.StickerPacks;
 import com.techpakka.whatsappstickerspack.ui.HomeActivity;
 import com.techpakka.whatsappstickerspack.ui.notifications.StickerPackDownloadActivity;
 import com.techpakka.whatsappstickerspack.whatsappbasecode.BottomFadingRecyclerView;
@@ -44,13 +45,20 @@ public class StickerMarketFragment extends Fragment implements StickerMarketView
         progressBar = root.findViewById(R.id.progressBar);
 
         stickerMarketViewModel.setStickerPackClickListener(this);
-        stickerMarketViewModel.setActivityWeakReference(new WeakReference<>(getActivity()));
+        stickerMarketViewModel.init(new WeakReference<>(getActivity()));
 
         HomeActivity.mutableStickerPacks.observe(getViewLifecycleOwner(), new Observer<ArrayList<StickerPack>>() {
             @Override
             public void onChanged(ArrayList<StickerPack> stickerPacks) {
                 progressBar.setVisibility(View.GONE);
                 stickerMarketViewModel.adapter.notifyDataSetChanged();
+            }
+        });
+
+        stickerMarketViewModel.progress.observe(getViewLifecycleOwner(), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                progressBar.setVisibility(integer);
             }
         });
 
@@ -69,14 +77,12 @@ public class StickerMarketFragment extends Fragment implements StickerMarketView
         adapter.notifyDataSetChanged();
     }
 
+
+
     @Override
-    public void onStickerPackClicked(StickerPack stickerPack) {
+    public void onStickerPackClicked(StickerPacks stickerPacks) {
         Intent intent = new Intent(getActivity(), StickerPackDownloadActivity.class);
-        intent.putExtra("stickerPack",stickerPack);
+        intent.putExtra("stickerPackId",stickerPacks.getStickerPackId());
         getActivity().startActivity(intent);
     }
-
-
-
-
 }

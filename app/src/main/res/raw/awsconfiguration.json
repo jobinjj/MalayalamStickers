@@ -1,0 +1,43 @@
+{
+    "UserAgent": "aws-amplify-cli/0.1.0",
+    "Version": "0.1.0",
+    "IdentityManager": {
+        "Default": {}
+    },
+    "CredentialsProvider": {
+        "CognitoIdentity": {
+            "Default": {
+                "PoolId": "ap-south-1:6e76e27a-0528-49ff-98ba-1df8f6a65a92",
+                "Region": "ap-south-1"
+            }
+        }
+    },
+    "CognitoUserPool": {
+        "Default": {
+            "PoolId": "ap-south-1_5eyvuptpu",
+            "AppClientId": "6j9pmt73l43bhm3cpo4lso4bee",
+            "AppClientSecret": "saeqsh77apisirgp7pqu6iqs2lfibufbt5p4h9rdject6b0aet3",
+            "Region": "ap-south-1"
+        }
+    },
+    "Auth": {
+        "Default": {
+            "authenticationFlowType": "USER_SRP_AUTH"
+        }
+    },
+    "AppSync": {
+        "Default": {
+            "ApiUrl": "https://m3kmh5nzmbbwramhhsvisftihi.appsync-api.ap-south-1.amazonaws.com/graphql",
+            "Region": "ap-south-1",
+            "AuthMode": "API_KEY",
+            "ApiKey": "da2-3tu52qafzfdqfmolwstwo2lllq",
+            "ClientDatabasePrefix": "MalayalamStickers_API_KEY"
+        },
+        "MalayalamStickers_AWS_IAM": {
+            "ApiUrl": "https://m3kmh5nzmbbwramhhsvisftihi.appsync-api.ap-south-1.amazonaws.com/graphql",
+            "Region": "ap-south-1",
+            "AuthMode": "AWS_IAM",
+            "ClientDatabasePrefix": "MalayalamStickers_AWS_IAM"
+        }
+    }
+}

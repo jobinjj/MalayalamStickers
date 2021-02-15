@@ -18,17 +18,22 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.techpakka.whatsappstickerspack.R;
 import com.techpakka.whatsappstickerspack.idoideas.DataArchiver;
+import com.techpakka.whatsappstickerspack.idoideas.StickerBook;
+import com.techpakka.whatsappstickerspack.room.RoomTasks;
+import com.techpakka.whatsappstickerspack.room.StickerPacks;
+import com.techpakka.whatsappstickerspack.room.Stickers;
 import com.techpakka.whatsappstickerspack.ui.MarketStickerPreviewAdapter;
 import com.techpakka.whatsappstickerspack.utils.DownloadStickersFromURL;
 import com.techpakka.whatsappstickerspack.whatsappbasecode.AddStickerPackActivity;
-import com.techpakka.whatsappstickerspack.whatsappbasecode.StickerPreviewAdapter;
 import com.techpakka.whatsappstickerspack.whatsappbasecode.models.Sticker;
 import com.techpakka.whatsappstickerspack.whatsappbasecode.models.StickerPack;
 
 import java.io.File;
+import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class StickerPackDownloadActivity extends AddStickerPackActivity {
@@ -46,13 +51,13 @@ public class StickerPackDownloadActivity extends AddStickerPackActivity {
     public static final String EXTRA_STICKER_PACK_LICENSE_AGREEMENT = "sticker_pack_license_agreement";
     public static final String EXTRA_STICKER_PACK_TRAY_ICON = "sticker_pack_tray_icon";
     public static final String EXTRA_SHOW_UP_BUTTON = "show_up_button";
-    public static final String EXTRA_STICKER_PACK_DATA = "stickerPack";
+    public static final String EXTRA_STICKER_PACK_DATA = "stickerPackId";
 
     private RecyclerView recyclerView;
     private GridLayoutManager layoutManager;
     private MarketStickerPreviewAdapter marketStickerPreviewAdapter;
     private int numColumns;
-    private StickerPack stickerPack;
+    private long stickerPackId;
     private View divider;
     private ConstraintLayout downloadContainer;
     private DownloadStickersFromURL task;
@@ -60,14 +65,16 @@ public class StickerPackDownloadActivity extends AddStickerPackActivity {
     private TextView txtProgress;
     private TextView txtSize;
     private Button downloadButton;
+    private ArrayList<Stickers> stickersList = new ArrayList<>();
+    private long totalStickersSize;
+    private StickerPacks stickerPacks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sticker_pack_download);
-        boolean showUpButton = getIntent().getBooleanExtra(EXTRA_SHOW_UP_BUTTON, false);
-        stickerPack = getIntent().getParcelableExtra(EXTRA_STICKER_PACK_DATA);
 
+        boolean showUpButton = getIntent().getBooleanExtra(EXTRA_SHOW_UP_BUTTON, false);
         TextView packNameTextView = findViewById(R.id.pack_name);
         TextView packPublisherTextView = findViewById(R.id.author);
         ImageView packTrayIcon = findViewById(R.id.tray_image);
@@ -77,11 +84,6 @@ public class StickerPackDownloadActivity extends AddStickerPackActivity {
         progressBar.setMax(100);
         txtProgress = findViewById(R.id.textView);
         downloadButton = findViewById(R.id.downloadButton);
-        txtProgress.setText("0% 0f " + Formatter.formatShortFileSize(this, stickerPack.getTotalSize()));
-        if (stickerPackAlreadyDownloaded(stickerPack)){
-            downloadButton.setText("Downloaded");
-            downloadButton.setEnabled(false);
-        }
         downloadContainer = findViewById(R.id.download_container);
         layoutManager = new GridLayoutManager(this, 1);
         recyclerView = findViewById(R.id.sticker_list);
@@ -90,25 +92,57 @@ public class StickerPackDownloadActivity extends AddStickerPackActivity {
         recyclerView.addOnScrollListener(dividerScrollListener);
         divider = findViewById(R.id.divider);
         if (marketStickerPreviewAdapter == null) {
-            marketStickerPreviewAdapter = new MarketStickerPreviewAdapter(getLayoutInflater(), R.drawable.sticker_error, getResources().getDimensionPixelSize(R.dimen.sticker_pack_details_image_size), getResources().getDimensionPixelSize(R.dimen.sticker_pack_details_image_padding), stickerPack,this);
+            marketStickerPreviewAdapter = new MarketStickerPreviewAdapter(getLayoutInflater(), R.drawable.sticker_error, getResources().getDimensionPixelSize(R.dimen.sticker_pack_details_image_size), getResources().getDimensionPixelSize(R.dimen.sticker_pack_details_image_padding), stickersList,StickerPackDownloadActivity.this);
             recyclerView.setAdapter(marketStickerPreviewAdapter);
         }
-        packNameTextView.setText(stickerPack.name);
-        packPublisherTextView.setText(stickerPack.publisher);
-        Glide.with(this).load(stickerPack.getThumbnail()).into(packTrayIcon);
-        packSizeTextView.setText(Formatter.formatShortFileSize(this, stickerPack.getTotalSize()));
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(showUpButton);
-            getSupportActionBar().setTitle(showUpButton ? getResources().getString(R.string.title_activity_sticker_pack_details_multiple_pack) : getResources().getQuantityString(R.plurals.title_activity_sticker_packs_list, 1));
-        }
+
+        stickerPackId = getIntent().getLongExtra("stickerPackId",0L);
+        new RoomTasks.FetchStickersById(stickerPackId, new RoomTasks.FetchStickersById.FetchStickersListener() {
+            @Override
+            public void onFetched(List<Stickers> stickers) {
+                stickersList.addAll(stickers);
+                marketStickerPreviewAdapter.notifyDataSetChanged();
+                totalStickersSize = 0;
+                for (Stickers sticker:
+                     stickers) {
+                    totalStickersSize += sticker.getSize();
+                }
+                txtProgress.setText("0% 0f " + Formatter.formatShortFileSize(StickerPackDownloadActivity.this, totalStickersSize));
+
+            }
+        }).execute();
+
+        new RoomTasks.FetchStickerPackById(stickerPackId, new RoomTasks.FetchStickerPackById.FetchStickerPackListener() {
+            @Override
+            public void onFetched(StickerPacks stickerPack) {
+                stickerPacks = stickerPack;
+                if (stickerPackAlreadyDownloaded(stickerPack.identifier)){
+                    downloadButton.setText("Downloaded");
+                    downloadButton.setEnabled(false);
+                }
+
+                packNameTextView.setText(stickerPack.name);
+                packPublisherTextView.setText("Kerala game studio");
+                Glide.with(StickerPackDownloadActivity.this).load(stickerPack.getThumbnail()).into(packTrayIcon);
+                packSizeTextView.setText(Formatter.formatShortFileSize(StickerPackDownloadActivity.this, totalStickersSize));
+                if (getSupportActionBar() != null) {
+                    getSupportActionBar().setDisplayHomeAsUpEnabled(showUpButton);
+                    getSupportActionBar().setTitle(showUpButton ? getResources().getString(R.string.title_activity_sticker_pack_details_multiple_pack) : getResources().getQuantityString(R.plurals.title_activity_sticker_packs_list, 1));
+                }
+            }
+        }).execute();
+
+
+
+
     }
 
-    private boolean stickerPackAlreadyDownloaded(StickerPack stickerPack) {
+    private boolean stickerPackAlreadyDownloaded(String identifier) {
 
         List<StickerPack> localStickerList = DataArchiver.readStickerPackJSONFromSharedPref(this);
         for (StickerPack localStickerPack:
              localStickerList) {
-            if (localStickerPack.getIdentifier().equals(stickerPack.identifier)) return true;
+            if (localStickerPack.getIdentifier().equals(identifier)) return true;
         }
         return false;
     }
@@ -158,7 +192,7 @@ public class StickerPackDownloadActivity extends AddStickerPackActivity {
         ((Button) view).setText("Downloading");
         ((Button) view).setEnabled(false);
         try {
-            task = new DownloadStickersFromURL(String.valueOf(stickerPack.getTotalSize()), new DownloadStickersFromURL.StickersDownloadListener() {
+            task = new DownloadStickersFromURL(String.valueOf(totalStickersSize), new DownloadStickersFromURL.StickersDownloadListener() {
                 @Override
                 public void onDownloadStarted() {
 
@@ -176,7 +210,7 @@ public class StickerPackDownloadActivity extends AddStickerPackActivity {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    txtProgress.setText( String.valueOf(progress) + "% 0f " + Formatter.formatShortFileSize(StickerPackDownloadActivity.this, stickerPack.getTotalSize()));
+                                    txtProgress.setText( String.valueOf(progress) + "% 0f " + Formatter.formatShortFileSize(StickerPackDownloadActivity.this, totalStickersSize));
                                     progressBar.setProgress(progress);
                                 }
                             });
@@ -221,7 +255,26 @@ public class StickerPackDownloadActivity extends AddStickerPackActivity {
                                         String imagePath = sticker.getImageFileName();
                                         sticker.setImageFileName(imagePath.substring(imagePath.lastIndexOf("/")+1));
                                     }*/
+                                  StickerPack stickerPack = new StickerPack();
+                                  stickerPack.setName(stickerPacks.getName());
+                                  stickerPack.setIdentifier(stickerPacks.getIdentifier());
+                                  stickerPack.setTrayImageFile(stickerPacks.getTrayImageFile());
+                                  stickerPack.setDownloadUrl(stickerPacks.getDownloadUrl());
+                                  stickerPack.setThumbnail(stickerPacks.getThumbnail());
+                                  ArrayList<Sticker> stickerArrayList = new ArrayList<>();
+                                  String emojis = "t,s";
+                                    for (Stickers stickers:
+                                         stickersList) {
+                                        Sticker sticker = new Sticker();
+                                        sticker.setEmojis(Arrays.asList(emojis.split("\\s*,\\s*")));
+                                        sticker.setImageFileName(stickers.getImageFileName());
+                                        sticker.setSize(stickers.getSize());
+                                        sticker.setStickerUrl(stickers.getStickerUrl());
+                                        stickerArrayList.add(sticker);
+                                    }
+                                    stickerPack.setStickers(stickerArrayList);
                                     localStickers.add(stickerPack);
+                                    StickerBook.addStickerPackExisting(stickerPack);
                                     DataArchiver.writeStickerBookJSON(localStickers,StickerPackDownloadActivity.this);
                                 }
                             };
@@ -262,7 +315,7 @@ public class StickerPackDownloadActivity extends AddStickerPackActivity {
                 public void onCancelled() {
 
                 }
-            },new URL(stickerPack.downloadUrl),StickerPackDownloadActivity.this);
+            },new URL(stickerPacks.getDownloadUrl()),StickerPackDownloadActivity.this);
             task.execute();
         } catch (MalformedURLException e) {
             e.printStackTrace();
